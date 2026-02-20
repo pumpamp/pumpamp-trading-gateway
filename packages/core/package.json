@@ -1,0 +1,25 @@
+{
+  "name": "@pumpamp/core",
+  "version": "0.1.0",
+  "description": "Core gateway logic for PumpAmp Trading Gateway",
+  "type": "module",
+  "license": "MIT",
+  "author": "PumpAmp <hello@pumpamp.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pumpamp/pumpamp-trading-gateway.git",
+    "directory": "packages/core"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "ws": "^8.16.0",
+    "dotenv": "^16.4.0",
+    "pino": "^9.0.0",
+    "zod": "^3.22.0",
+    "commander": "^12.0.0"
+  }
+}

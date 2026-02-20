@@ -1,0 +1,74 @@
+{
+  "enabled": true,
+  "dry_run": true,
+
+  "rules": [
+    {
+      "name": "high_confidence_momentum",
+      "enabled": true,
+      "signal_types": ["strategy"],
+      "signal_names": ["MomentumBreakout", "VolumeSpike"],
+      "venues": ["binance"],
+      "min_confidence": 80,
+      "directions": ["long", "short"],
+      "action": {
+        "side": "from_signal",
+        "size": 0.01,
+        "order_type": "market"
+      }
+    },
+    {
+      "name": "prediction_arb",
+      "enabled": true,
+      "signal_types": ["cross_venue_arbitrage"],
+      "min_confidence": 70,
+      "min_severity": "High",
+      "action": {
+        "side": "from_signal",
+        "size": 10,
+        "order_type": "market"
+      }
+    },
+    {
+      "name": "kalshi_alerts",
+      "enabled": false,
+      "signal_types": ["alert"],
+      "venues": ["kalshi"],
+      "min_severity": "Critical",
+      "action": {
+        "side": "yes",
+        "size": 5,
+        "order_type": "limit",
+        "limit_price_offset_bps": -200
+      }
+    },
+    {
+      "name": "crypto_15m_momentum",
+      "enabled": false,
+      "signal_types": ["alert"],
+      "signal_names": ["sharp_line_movement", "std_dev_breakout"],
+      "venues": ["kalshi", "polymarket"],
+      "min_confidence": 75,
+      "min_severity": "High",
+      "directions": ["above", "below"],
+      "action": {
+        "side": "from_signal",
+        "size": 25,
+        "order_type": "market"
+      }
+    }
+  ],
+
+  "market_mappings": {
+    "kalshi:BTC-100K/YES": "kalshi:KXBTCD-26DEC31",
+    "kalshi:ETH-5K/YES": "kalshi:KXETHD-26DEC31"
+  },
+
+  "risk_limits": {
+    "max_position_size_per_market": 100,
+    "max_total_exposure_usd": 5000,
+    "max_trades_per_minute": 3,
+    "market_cooldown_seconds": 60,
+    "signal_dedup_window_seconds": 300
+  }
+}

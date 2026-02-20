@@ -1,0 +1,52 @@
+{
+  "_description": "15-minute crypto prediction market momentum strategy. Trades binary contracts that settle every 15 minutes based on whether BTC/ETH/SOL/XRP exceeds a strike price.",
+  "_usage": "Update market_mappings with current Kalshi tickers (KXBTC15M-*) or Polymarket condition IDs before each session. Tickers rotate every 15 minutes. Start with dry_run: true to verify signal matching.",
+  "_signals": ["sharp_line_movement", "std_dev_breakout", "prediction_volume_spike"],
+  "_market_id_notes": "Kalshi 15m tickers follow the pattern KXBTC15M-YYMMMDDTHHMM-BPRICE (e.g., KXBTC15M-26FEB18T1600-B100000). Polymarket uses hex condition IDs with :0 (Yes) or :1 (No) suffix.",
+  "enabled": true,
+  "dry_run": true,
+  "rules": [
+    {
+      "name": "crypto_15m_momentum",
+      "enabled": true,
+      "signal_types": ["alert"],
+      "signal_names": ["sharp_line_movement", "std_dev_breakout"],
+      "venues": ["kalshi", "polymarket"],
+      "min_confidence": 75,
+      "min_severity": "High",
+      "directions": ["above", "below"],
+      "action": {
+        "side": "from_signal",
+        "size": 25,
+        "order_type": "market"
+      }
+    },
+    {
+      "name": "crypto_15m_volume_spike",
+      "enabled": true,
+      "signal_types": ["alert"],
+      "signal_names": ["prediction_volume_spike"],
+      "venues": ["kalshi", "polymarket"],
+      "min_confidence": 80,
+      "min_severity": "High",
+      "action": {
+        "side": "from_signal",
+        "size": 15,
+        "order_type": "limit",
+        "limit_price_offset_bps": -100
+      }
+    }
+  ],
+  "market_mappings": {
+    "_example_kalshi_btc": "kalshi:KXBTC15M-26FEB18T1600-B100000",
+    "_example_kalshi_eth": "kalshi:KXETH15M-26FEB18T1600-B2700",
+    "_example_polymarket": "polymarket:0xABC123...DEF:0"
+  },
+  "risk_limits": {
+    "max_position_size_per_market": 100,
+    "max_total_exposure_usd": 1000,
+    "max_trades_per_minute": 4,
+    "market_cooldown_seconds": 90,
+    "signal_dedup_window_seconds": 120
+  }
+}

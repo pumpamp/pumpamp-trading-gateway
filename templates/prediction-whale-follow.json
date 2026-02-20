@@ -1,0 +1,44 @@
+{
+  "_description": "Follows large trades and whale activity in prediction markets. Uses conservative position sizes and longer cooldowns to avoid overexposure.",
+  "_usage": "Suitable for accounts with smaller balances. The conservative defaults limit risk. Increase sizes gradually after validating signal quality in dry-run mode.",
+  "_signals": ["prediction_large_trade", "whale_activity"],
+  "enabled": true,
+  "dry_run": true,
+  "rules": [
+    {
+      "name": "large_trade_follow",
+      "enabled": true,
+      "signal_types": ["alert"],
+      "signal_names": ["prediction_large_trade"],
+      "venues": ["kalshi", "polymarket"],
+      "min_confidence": 80,
+      "min_severity": "High",
+      "action": {
+        "side": "from_signal",
+        "size": 5,
+        "order_type": "market"
+      }
+    },
+    {
+      "name": "whale_activity_follow",
+      "enabled": true,
+      "signal_types": ["alert"],
+      "signal_names": ["whale_activity"],
+      "venues": ["kalshi", "polymarket"],
+      "min_confidence": 85,
+      "min_severity": "High",
+      "action": {
+        "side": "from_signal",
+        "size": 5,
+        "order_type": "market"
+      }
+    }
+  ],
+  "market_mappings": {},
+  "risk_limits": {
+    "max_position_size_per_market": 25,
+    "max_trades_per_minute": 2,
+    "market_cooldown_seconds": 300,
+    "signal_dedup_window_seconds": 600
+  }
+}

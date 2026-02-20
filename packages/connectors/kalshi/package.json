@@ -1,0 +1,24 @@
+{
+  "name": "@pumpamp/connector-kalshi",
+  "version": "0.1.0",
+  "description": "Kalshi prediction market connector for PumpAmp Trading Gateway",
+  "type": "module",
+  "license": "MIT",
+  "author": "PumpAmp <hello@pumpamp.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pumpamp/pumpamp-trading-gateway.git",
+    "directory": "packages/connectors/kalshi"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@pumpamp/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

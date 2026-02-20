@@ -1,0 +1,43 @@
+{
+  "_description": "Cross-venue prediction market arbitrage. Buys on one venue and sells on another when spread exceeds threshold.",
+  "_usage": "Use with the PumpAmp cross-venue arbitrage signal pipeline. Requires accounts on both Kalshi and Polymarket. Set dry_run to false only after verifying signal quality.",
+  "_signals": ["cross_venue_arbitrage", "prediction_market_inefficiency"],
+  "enabled": true,
+  "dry_run": true,
+  "rules": [
+    {
+      "name": "cross_venue_arb",
+      "enabled": true,
+      "signal_types": ["alert"],
+      "signal_names": ["cross_venue_arbitrage"],
+      "venues": ["kalshi", "polymarket"],
+      "min_confidence": 70,
+      "action": {
+        "side": "from_signal",
+        "size": 10,
+        "order_type": "market"
+      }
+    },
+    {
+      "name": "market_inefficiency",
+      "enabled": true,
+      "signal_types": ["alert"],
+      "signal_names": ["prediction_market_inefficiency"],
+      "venues": ["kalshi", "polymarket"],
+      "min_confidence": 80,
+      "action": {
+        "side": "from_signal",
+        "size": 5,
+        "order_type": "market"
+      }
+    }
+  ],
+  "market_mappings": {},
+  "risk_limits": {
+    "max_position_size_per_market": 50,
+    "max_total_exposure_usd": 2000,
+    "max_trades_per_minute": 3,
+    "market_cooldown_seconds": 120,
+    "signal_dedup_window_seconds": 300
+  }
+}

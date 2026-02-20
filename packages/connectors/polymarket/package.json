@@ -1,0 +1,23 @@
+{
+  "name": "@pumpamp/connector-polymarket",
+  "version": "0.1.0",
+  "description": "Polymarket prediction market connector for PumpAmp Trading Gateway",
+  "type": "module",
+  "license": "MIT",
+  "author": "PumpAmp <hello@pumpamp.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pumpamp/pumpamp-trading-gateway.git",
+    "directory": "packages/connectors/polymarket"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@pumpamp/core": "workspace:*",
+    "@polymarket/clob-client": "^5.2.3",
+    "@ethersproject/wallet": "^5.7.0"
+  }
+}

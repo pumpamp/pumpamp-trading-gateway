@@ -1,0 +1,44 @@
+{
+  "name": "pumpamp-trading-gateway",
+  "version": "0.1.0",
+  "description": "Open-source trading gateway for PumpAmp - execute trades on your exchange accounts from PumpAmp signals",
+  "type": "module",
+  "license": "MIT",
+  "author": "PumpAmp <hello@pumpamp.com>",
+  "homepage": "https://github.com/pumpamp/pumpamp-trading-gateway",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pumpamp/pumpamp-trading-gateway.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pumpamp/pumpamp-trading-gateway/issues"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "bin": {
+    "pumpamp-gateway": "./packages/core/dist/cli.js"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint 'packages/**/*.ts'",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@pumpamp/connector-kalshi": "workspace:*",
+    "@pumpamp/connector-polymarket": "workspace:*",
+    "@pumpamp/connector-hyperliquid": "workspace:*",
+    "@pumpamp/connector-binance": "workspace:*"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@types/node": "^20.0.0",
+    "@types/ws": "^8.5.0",
+    "eslint": "^9.39.2",
+    "typescript": "^5.4.0",
+    "typescript-eslint": "^8.55.0",
+    "vitest": "^2.0.0"
+  }
+}

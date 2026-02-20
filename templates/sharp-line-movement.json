@@ -1,0 +1,35 @@
+{
+  "_description": "Follows sharp line movements in prediction markets. Detects rapid price changes and trades in the direction of momentum.",
+  "_usage": "Best for liquid markets with frequent price updates. Requires market_mappings to map PumpAmp signal market IDs to venue-native IDs. See _mapping_notes for examples.",
+  "_signals": ["sharp_line_movement"],
+  "enabled": true,
+  "dry_run": true,
+  "rules": [
+    {
+      "name": "sharp_line_follow",
+      "enabled": true,
+      "signal_types": ["alert"],
+      "signal_names": ["sharp_line_movement"],
+      "venues": ["kalshi", "polymarket"],
+      "min_confidence": 70,
+      "min_severity": "High",
+      "directions": ["above", "below"],
+      "action": {
+        "side": "from_signal",
+        "size": 10,
+        "order_type": "market"
+      }
+    }
+  ],
+  "market_mappings": {
+    "_mapping_notes": "Map PumpAmp signal market IDs to venue-native market IDs. Example: kalshi:BTC-100K/YES -> kalshi:KXBTCD-26DEC31",
+    "kalshi:BTC-100K/YES": "kalshi:KXBTCD-26DEC31",
+    "polymarket:BTC-100K/YES": "polymarket:0xabc123:0"
+  },
+  "risk_limits": {
+    "max_position_size_per_market": 30,
+    "max_trades_per_minute": 2,
+    "market_cooldown_seconds": 180,
+    "signal_dedup_window_seconds": 300
+  }
+}

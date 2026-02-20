@@ -1,0 +1,31 @@
+{
+  "_description": "Cross-venue arbitrage for 15-minute crypto prediction markets. Exploits pricing differences between Kalshi and Polymarket on the same underlying 15m binary contract.",
+  "_usage": "Requires accounts on both Kalshi and Polymarket. The arbitrage signal payload contains venue-native market IDs for both legs. Update market_mappings if signal market IDs differ from venue-native IDs.",
+  "_signals": ["cross_venue_arbitrage"],
+  "_market_id_notes": "Arbitrage signals include leg_buy.market_id and leg_sell.market_id with venue-native IDs. The market_mappings below are examples - real arb signals typically carry native IDs directly.",
+  "enabled": true,
+  "dry_run": true,
+  "rules": [
+    {
+      "name": "crypto_15m_cross_venue_arb",
+      "enabled": true,
+      "signal_types": ["cross_venue_arbitrage"],
+      "venues": ["kalshi", "polymarket"],
+      "min_confidence": 70,
+      "min_severity": "High",
+      "action": {
+        "side": "from_signal",
+        "size": 25,
+        "order_type": "market"
+      }
+    }
+  ],
+  "market_mappings": {},
+  "risk_limits": {
+    "max_position_size_per_market": 50,
+    "max_total_exposure_usd": 500,
+    "max_trades_per_minute": 3,
+    "market_cooldown_seconds": 60,
+    "signal_dedup_window_seconds": 120
+  }
+}

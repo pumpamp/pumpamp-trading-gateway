@@ -1,0 +1,43 @@
+{
+  "_description": "Trades based on volume spike signals. Includes both momentum (trade with the spike) and contrarian (fade the spike) strategies. Contrarian is disabled by default.",
+  "_usage": "Enable the momentum rule for trending markets. The contrarian rule uses limit orders with a negative offset to fade spikes - enable only after thorough backtesting.",
+  "_signals": ["prediction_volume_spike"],
+  "enabled": true,
+  "dry_run": true,
+  "rules": [
+    {
+      "name": "volume_spike_momentum",
+      "enabled": true,
+      "signal_types": ["alert"],
+      "signal_names": ["prediction_volume_spike"],
+      "venues": ["kalshi", "polymarket"],
+      "min_confidence": 70,
+      "action": {
+        "side": "from_signal",
+        "size": 10,
+        "order_type": "market"
+      }
+    },
+    {
+      "name": "volume_spike_contrarian",
+      "enabled": false,
+      "signal_types": ["alert"],
+      "signal_names": ["prediction_volume_spike"],
+      "venues": ["kalshi", "polymarket"],
+      "min_confidence": 80,
+      "action": {
+        "side": "from_signal",
+        "size": 5,
+        "order_type": "limit",
+        "limit_price_offset_bps": -300
+      }
+    }
+  ],
+  "market_mappings": {},
+  "risk_limits": {
+    "max_position_size_per_market": 30,
+    "max_trades_per_minute": 4,
+    "market_cooldown_seconds": 90,
+    "signal_dedup_window_seconds": 300
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "@pumpamp/connector-hyperliquid",
+  "version": "0.1.0",
+  "description": "Hyperliquid perpetual futures connector for PumpAmp Trading Gateway",
+  "type": "module",
+  "license": "MIT",
+  "author": "PumpAmp <hello@pumpamp.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pumpamp/pumpamp-trading-gateway.git",
+    "directory": "packages/connectors/hyperliquid"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@pumpamp/core": "workspace:*",
+    "ethers": "^6.11.0"
+  }
+}
