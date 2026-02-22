@@ -102,6 +102,9 @@ function createLogCapture(): { stream: Writable; getAll: () => string } {
   };
 }
 
+// ============================================================
+// ============================================================
+
 describe('Credential Safety', () => {
   let server: TestServer;
 
@@ -439,6 +442,7 @@ describe('Credential Safety', () => {
     // Read .env.example
     const envExample = readFileSync(resolve(projectRoot, '.env.example'), 'utf8');
 
+    // requirements:
     // 1. .env.example exists and contains placeholder values (not real secrets)
     expect(envExample).toBeTruthy();
 

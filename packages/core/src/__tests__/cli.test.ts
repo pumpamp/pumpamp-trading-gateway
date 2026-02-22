@@ -70,6 +70,9 @@ function fullConfig(overrides?: Partial<GatewayConfig>): GatewayConfig {
   };
 }
 
+// ============================================================
+// ============================================================
+
 describe('CLI commands', () => {
   let consoleLogSpy: ReturnType<typeof vi.spyOn>;
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;

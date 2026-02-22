@@ -11,9 +11,9 @@ import { Wallet } from '@ethersproject/wallet';
 export interface PolymarketConnectorConfig {
   apiUrl: string;
   privateKey: string;
-  apiKey: string;
-  apiSecret: string;
-  passphrase: string;
+  apiKey?: string;
+  apiSecret?: string;
+  passphrase?: string;
   proxyAddress?: string;
 }
 
@@ -28,6 +28,8 @@ interface CachedMarket {
 export class PolymarketConnector implements VenueConnector {
   readonly venue = 'polymarket';
   private client: ClobClient;
+  private readonly config: PolymarketConnectorConfig;
+  private readonly wallet: Wallet;
   private healthy = false;
   private lastHealthCheck = 0;
   private readonly HEALTH_CHECK_INTERVAL = 30_000;
@@ -35,20 +37,22 @@ export class PolymarketConnector implements VenueConnector {
   private marketCache = new Map<string, CachedMarket>();
 
   constructor(config: PolymarketConnectorConfig) {
-    const wallet = new Wallet(config.privateKey);
+    this.config = config;
+    this.wallet = new Wallet(config.privateKey);
 
     // signatureType: 0 = EOA (no proxy), 1 = POLY_PROXY (proxy wallet holds funds)
     const signatureType = config.proxyAddress ? 1 : 0;
 
+    // Create initial client -- may be without API creds if auto-deriving
+    const creds = config.apiKey && config.apiSecret && config.passphrase
+      ? { key: config.apiKey, secret: config.apiSecret, passphrase: config.passphrase }
+      : undefined;
+
     this.client = new ClobClient(
       config.apiUrl,
       Chain.POLYGON,
-      wallet,
-      {
-        key: config.apiKey,
-        secret: config.apiSecret,
-        passphrase: config.passphrase,
-      },
+      this.wallet,
+      creds,
       signatureType,
       config.proxyAddress,
     );
@@ -56,6 +60,22 @@ export class PolymarketConnector implements VenueConnector {
 
   async connect(): Promise<void> {
     try {
+      // Auto-derive API credentials from private key if not explicitly provided
+      if (!this.config.apiKey || !this.config.apiSecret || !this.config.passphrase) {
+        const derived = await this.client.deriveApiKey();
+        const signatureType = this.config.proxyAddress ? 1 : 0;
+
+        // Re-create client with derived credentials
+        this.client = new ClobClient(
+          this.config.apiUrl,
+          Chain.POLYGON,
+          this.wallet,
+          { key: derived.key, secret: derived.secret, passphrase: derived.passphrase },
+          signatureType,
+          this.config.proxyAddress,
+        );
+      }
+
       await this.client.getOpenOrders();
       this.healthy = true;
       this.lastHealthCheck = Date.now();
@@ -129,11 +149,18 @@ export class PolymarketConnector implements VenueConnector {
       const isBuy = order.action === 'open';
       const side = isBuy ? Side.BUY : Side.SELL;
 
+      // For market orders without a limit_price, use extreme boundary to ensure fill:
+      // BUY: 0.99 (max valid price), SELL: 0.01 (min valid price)
+      // Polymarket prices must be in (0, 1) exclusive. For size=1 at 0.99, the
+      // order amount ($0.99) may be below Polymarket's $1 minimum -- use size >= 2.
+      const defaultMarketPrice = isBuy ? 0.99 : 0.01;
+      const price = order.limit_price ?? defaultMarketPrice;
+
       // Build and sign the order using the official client
       const signedOrder = await this.client.createOrder({
         tokenID: tokenId,
         side,
-        price: order.limit_price ?? 0.5,
+        price,
         size: order.size,
         feeRateBps,
         nonce: undefined,
@@ -176,10 +203,19 @@ export class PolymarketConnector implements VenueConnector {
     }
   }
 
+  /**
+   * Not yet implemented. Polymarket's CLOB API does not expose a single
+   * positions endpoint; retrieving positions requires on-chain queries
+   * against the CTF Exchange contract. Returns an empty array for now.
+   */
   async getPositions(): Promise<Position[]> {
     return [];
   }
 
+  /**
+   * Not yet implemented. Polymarket balances live in a proxy contract
+   * wallet and require on-chain reads. Returns zero balances for now.
+   */
   async getBalance(): Promise<Balance> {
     return {
       venue: 'polymarket',

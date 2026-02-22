@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { strategyConfigSchema } from '../strategy-config.js';
 
+// ============================================================
+// ============================================================
+
 describe('strategy-config', () => {
   it('Valid config parses successfully', () => {
     const input = {

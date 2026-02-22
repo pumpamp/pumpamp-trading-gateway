@@ -10,10 +10,9 @@ const { privateKey: testPrivateKeyPem } = generateKeyPairSync('rsa', {
 });
 
 // ============================================================
-// UT-6a.1: RSA-PSS signing (4 tests)
 // ============================================================
 
-describe('UT-6a.1: Kalshi RSA-PSS signing', () => {
+describe('Kalshi RSA-PSS signing', () => {
   it('signs message with known RSA key and produces non-empty base64 signature', () => {
     const timestamp = '1700000000000';
     const method = 'GET';

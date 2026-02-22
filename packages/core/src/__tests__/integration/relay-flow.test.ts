@@ -113,8 +113,11 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// ============================================================
+//
 // These tests use REAL timers because the ws package relies on
 // real I/O event loops. Fake timers break WebSocket message delivery.
+// ============================================================
 
 describe('Relay Connection Flow', () => {
   let server: TestServer;

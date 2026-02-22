@@ -7,6 +7,9 @@ import {
   createTestConfig,
 } from './fixtures/strategy-test-helpers.js';
 
+// ============================================================
+// ============================================================
+
 function createArbSignal(overrides?: Partial<Signal>): Signal {
   return {
     id: 'sig-arb-001',
@@ -238,13 +241,17 @@ describe('strategy-engine-arb', () => {
     expect(result).toBeNull();
   });
 
+  // ============================================================
+  // Super-Hedge + Cutoff Tests
+  // ============================================================
+
   it('Super-hedge signal uses outcome sides with action open', () => {
     const config = createArbConfig();
     const engine = new StrategyEngine(config, () => []);
 
     const signal = createArbSignal({
       payload: {
-        ...(createArbSignal().payload as Record<string, unknown>),
+        ...createArbSignal().payload,
         strategy: 'super_hedge',
         buy_outcome: 'Yes',
         sell_outcome: 'No',
@@ -272,7 +279,7 @@ describe('strategy-engine-arb', () => {
 
     const signal = createArbSignal({
       payload: {
-        ...(createArbSignal().payload as Record<string, unknown>),
+        ...createArbSignal().payload,
         strategy: 'super_hedge',
         buy_outcome: 'No',
         sell_outcome: 'Yes',
@@ -296,7 +303,7 @@ describe('strategy-engine-arb', () => {
 
     const signal = createArbSignal({
       payload: {
-        ...(createArbSignal().payload as Record<string, unknown>),
+        ...createArbSignal().payload,
         strategy: 'directional',
       },
     });
@@ -332,7 +339,7 @@ describe('strategy-engine-arb', () => {
     const pastCutoff = new Date(Date.now() - 60_000).toISOString(); // 1 min ago
     const signal = createArbSignal({
       payload: {
-        ...(createArbSignal().payload as Record<string, unknown>),
+        ...createArbSignal().payload,
         signal_cutoff_utc: pastCutoff,
       },
     });
@@ -348,7 +355,7 @@ describe('strategy-engine-arb', () => {
     const futureWindowEnd = new Date(Date.now() + 10 * 60_000).toISOString();
     const signal = createArbSignal({
       payload: {
-        ...(createArbSignal().payload as Record<string, unknown>),
+        ...createArbSignal().payload,
         window_end_utc: futureWindowEnd,
       },
     });
@@ -365,7 +372,7 @@ describe('strategy-engine-arb', () => {
     const nearWindowEnd = new Date(Date.now() + 10_000).toISOString(); // 10s from now
     const signal = createArbSignal({
       payload: {
-        ...(createArbSignal().payload as Record<string, unknown>),
+        ...createArbSignal().payload,
         window_end_utc: nearWindowEnd,
       },
     });
@@ -392,7 +399,7 @@ describe('strategy-engine-arb', () => {
     const futureWindow = new Date(Date.now() + 600_000).toISOString(); // 10 min from now
     const signal = createArbSignal({
       payload: {
-        ...(createArbSignal().payload as Record<string, unknown>),
+        ...createArbSignal().payload,
         signal_cutoff_utc: pastCutoff,
         window_end_utc: futureWindow,
       },

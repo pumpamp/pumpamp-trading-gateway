@@ -29,6 +29,9 @@ function makeSettlement(overrides: Partial<Settlement> = {}): Settlement {
   };
 }
 
+// ============================================================
+// ============================================================
+
 describe('Position aggregation', () => {
   let tracker: PositionTracker;
 
@@ -96,6 +99,9 @@ describe('Position aggregation', () => {
     expect(remaining[0].market_id).toBe('BTCUSDT');
   });
 });
+
+// ============================================================
+// ============================================================
 
 describe('P&L computation', () => {
   let tracker: PositionTracker;
@@ -167,6 +173,9 @@ describe('P&L computation', () => {
     expect(positions[0].unrealized_pnl).toBeUndefined();
   });
 });
+
+// ============================================================
+// ============================================================
 
 describe('Settlement detection', () => {
   let tracker: PositionTracker;

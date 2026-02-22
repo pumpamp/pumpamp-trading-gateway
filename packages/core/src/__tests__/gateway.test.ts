@@ -105,6 +105,9 @@ function createMockConnector(venue: string, healthy = true): VenueConnector {
   };
 }
 
+// ============================================================
+// ============================================================
+
 describe('Connector discovery', () => {
   let gateway: InstanceType<typeof Gateway>;
 
@@ -169,6 +172,9 @@ describe('Connector discovery', () => {
     expect(status.venues).not.toHaveProperty('binance');
   });
 });
+
+// ============================================================
+// ============================================================
 
 describe('Graceful shutdown', () => {
   let gateway: InstanceType<typeof Gateway>;
@@ -289,6 +295,9 @@ describe('Graceful shutdown', () => {
     expect(reportIdx).toBeLessThan(disconnectIdx);
   });
 });
+
+// ============================================================
+// ============================================================
 
 describe('Health check integration', () => {
   beforeEach(() => {

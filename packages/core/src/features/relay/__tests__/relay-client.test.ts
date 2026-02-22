@@ -1,3 +1,4 @@
+//
 // Tests cover: state machine transitions, pairing handshake, heartbeat,
 // command handling, reconnection logic, and report sending.
 
@@ -111,6 +112,9 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
+// ===========================================================================
+// ===========================================================================
+
 describe('State machine transitions', () => {
   it('1. Initial state is DISCONNECTED', () => {
     const client = new RelayClient(defaultConfig());
@@ -161,6 +165,9 @@ describe('State machine transitions', () => {
   });
 });
 
+// ===========================================================================
+// ===========================================================================
+
 describe('Pairing handshake', () => {
   it('1. First connect uses pairing_code in URL query', () => {
     const client = new RelayClient(defaultConfig());
@@ -209,6 +216,9 @@ describe('Pairing handshake', () => {
     );
   });
 });
+
+// ===========================================================================
+// ===========================================================================
 
 describe('Heartbeat', () => {
   it('1. Heartbeat sent within 15s of connection', () => {
@@ -285,6 +295,9 @@ describe('Heartbeat', () => {
   });
 });
 
+// ===========================================================================
+// ===========================================================================
+
 describe('Command handling', () => {
   it('1. Incoming trade command emits "command" event', () => {
     const client = new RelayClient(defaultConfig());
@@ -359,6 +372,9 @@ describe('Command handling', () => {
     expect(ack.status).toBe('accepted');
   });
 });
+
+// ===========================================================================
+// ===========================================================================
 
 describe('Reconnection logic', () => {
   it('1. After close, reconnect attempted after 1s (first retry)', () => {
@@ -475,6 +491,9 @@ describe('Reconnection logic', () => {
     expect(ws2.url).not.toContain('pairing_code=');
   });
 });
+
+// ===========================================================================
+// ===========================================================================
 
 describe('Report sending', () => {
   it('1. sendReport(heartbeat) serializes to JSON and sends', () => {

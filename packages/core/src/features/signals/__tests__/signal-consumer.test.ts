@@ -1,3 +1,4 @@
+//
 // Tests cover: connection and subscription, signal event emission,
 // and reconnection with backoff.
 
@@ -107,6 +108,9 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
+// ===========================================================================
+// ===========================================================================
+
 describe('Connection and subscription', () => {
   it('1. Connects to correct URL with api_key', () => {
     const consumer = new SignalConsumer(defaultOptions());
@@ -161,6 +165,9 @@ describe('Connection and subscription', () => {
     expect(sent.min_confidence).toBe(0.7);
   });
 });
+
+// ===========================================================================
+// ===========================================================================
 
 describe('Signal event emission', () => {
   it('1. Incoming signal JSON emits "signal" event', () => {
@@ -225,6 +232,9 @@ describe('Signal event emission', () => {
     expect(handler.mock.calls[2][0]).toMatchObject({ id: 'sig_c', signal_name: 'Gamma' });
   });
 });
+
+// ===========================================================================
+// ===========================================================================
 
 describe('Reconnection', () => {
   it('1. Auto-reconnect on close with backoff', () => {

@@ -55,10 +55,9 @@ async function createConnectedConnector() {
 }
 
 // ============================================================
-// UT-6c.2: Order formatting (3 tests)
 // ============================================================
 
-describe('UT-6c.2: Hyperliquid order formatting', () => {
+describe('Hyperliquid order formatting', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -172,10 +171,9 @@ describe('UT-6c.2: Hyperliquid order formatting', () => {
 });
 
 // ============================================================
-// UT-6c.3: Balance retrieval (2 tests)
 // ============================================================
 
-describe('UT-6c.3: Hyperliquid balance retrieval', () => {
+describe('Hyperliquid balance retrieval', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

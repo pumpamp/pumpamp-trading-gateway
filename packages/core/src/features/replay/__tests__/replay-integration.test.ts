@@ -1,3 +1,5 @@
+// Replay integration tests
+
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { Signal } from '../../signals/signal-consumer.js';
 

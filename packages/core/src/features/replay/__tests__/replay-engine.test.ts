@@ -1,3 +1,5 @@
+// ReplayEngine unit tests
+
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { Signal } from '../../signals/signal-consumer.js';
 import type { TradeCommand } from '../../../shared/protocol.js';

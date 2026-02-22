@@ -18,6 +18,8 @@ import type {
   BotUserCommand,
   TradeCommand,
   PositionReport,
+  SettlementReport,
+  Settlement,
   ErrorReport,
   Position,
   OrderUpdateReport,
@@ -371,7 +373,7 @@ export class Gateway extends EventEmitter {
       }
     }
 
-    // Polymarket: needs POLYMARKET_PRIVATE_KEY + API_KEY + API_SECRET + PASSPHRASE
+    // Polymarket: only needs POLYMARKET_PRIVATE_KEY (API creds auto-derived)
     if (this.config.polymarket) {
       try {
         const { PolymarketConnector } = require('@pumpamp/connector-polymarket');
@@ -483,9 +485,19 @@ export class Gateway extends EventEmitter {
       this.emit('position_update', report);
     });
 
-    this.positionTracker.on('settlement', (settlement) => {
-      this.maybeSendReport({ type: 'settlement', ...settlement });
-      this.emit('settlement', settlement);
+    this.positionTracker.on('settlement', (settlement: Settlement) => {
+      const report: SettlementReport = {
+        type: 'settlement',
+        venue: settlement.venue,
+        market_id: settlement.market_id,
+        result: settlement.result,
+        entry_price: settlement.entry_price,
+        settlement_price: settlement.settlement_price,
+        realized_pnl: settlement.realized_pnl,
+        timestamp: settlement.timestamp ?? new Date().toISOString(),
+      };
+      this.maybeSendReport(report);
+      this.emit('settlement', report);
     });
   }
 

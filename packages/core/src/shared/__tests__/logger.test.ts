@@ -25,6 +25,9 @@ function createCapture(): { stream: Writable; getOutput: () => Record<string, un
   };
 }
 
+// ============================================================
+// ============================================================
+
 describe('Logger redaction', () => {
   it('Log object with PUMPAMP_API_KEY field is redacted', () => {
     const { stream, getOutput } = createCapture();

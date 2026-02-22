@@ -52,6 +52,9 @@ function makeTradeCommand(overrides: Partial<TradeCommand> = {}): TradeCommand {
   };
 }
 
+// ============================================================
+// ============================================================
+
 describe('Market ID parsing', () => {
   it('"kalshi:KXBTCD-26FEB11" parses to venue=kalshi, nativeId=KXBTCD-26FEB11', () => {
     const result = parseMarketId('kalshi:KXBTCD-26FEB11');
@@ -97,6 +100,9 @@ describe('Market ID parsing', () => {
     expect(result).toBeNull();
   });
 });
+
+// ============================================================
+// ============================================================
 
 describe('Command routing', () => {
   let router: OrderRouter;
@@ -203,6 +209,9 @@ describe('Command routing', () => {
     expect(kalshiConnector.placeOrder).not.toHaveBeenCalled();
   });
 });
+
+// ============================================================
+// ============================================================
 
 describe('Order lifecycle tracking', () => {
   let router: OrderRouter;
@@ -323,6 +332,9 @@ describe('Order lifecycle tracking', () => {
     expect(updates[0].venue_order_id).toBe('venue-ord-4');
   });
 });
+
+// ============================================================
+// ============================================================
 
 describe('Pause/Resume handling', () => {
   let router: OrderRouter;

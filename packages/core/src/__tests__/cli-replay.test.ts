@@ -1,3 +1,5 @@
+// CLI replay command tests
+
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Command } from 'commander';
 

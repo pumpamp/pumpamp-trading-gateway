@@ -28,14 +28,14 @@ pnpm add @pumpamp/connector-kalshi
 ```env
 KALSHI_API_URL=https://trading-api.kalshi.com
 KALSHI_API_KEY=your-api-key
-KALSHI_PRIVATE_KEY_PATH=/path/to/private-key.pem
+KALSHI_PRIVATE_KEY_PEM="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----"
 ```
 
 ### Private Key Generation
 
 1. Generate RSA key pair via Kalshi dashboard
 2. Download the private key PEM file
-3. Store securely and reference via `KALSHI_PRIVATE_KEY_PATH`
+3. Pass the PEM content via the `privateKeyPem` config option (or `KALSHI_PRIVATE_KEY_PEM` env var)
 
 ## Usage
 
@@ -45,7 +45,7 @@ import { KalshiConnector } from '@pumpamp/connector-kalshi';
 const connector = new KalshiConnector({
   apiUrl: process.env.KALSHI_API_URL!,
   apiKey: process.env.KALSHI_API_KEY!,
-  privateKeyPath: process.env.KALSHI_PRIVATE_KEY_PATH!,
+  privateKeyPem: process.env.KALSHI_PRIVATE_KEY_PEM!.replace(/\\n/g, '\n'),
 });
 
 // Connect and validate credentials
@@ -176,7 +176,7 @@ The connector runs a health check every 30 seconds by calling `getBalance()`. If
 # Build
 pnpm build
 
-# Run tests (when implemented)
+# Run tests (from monorepo root)
 pnpm test
 ```
 

@@ -13,6 +13,9 @@ function minimalEnv(overrides?: Record<string, string>): Record<string, string> 
   };
 }
 
+// ============================================================
+// ============================================================
+
 describe('Config validation (Zod schema)', () => {
   it('Valid minimal config passes', () => {
     const config = loadConfig(minimalEnv());
@@ -75,14 +78,16 @@ describe('Config validation (Zod schema)', () => {
     expect(config.polymarket!.apiUrl).toBe('https://clob.polymarket.com');
   });
 
-  it('Partial Polymarket config rejects (not enabled)', () => {
+  it('Polymarket with only private key enables connector (API creds auto-derived)', () => {
     const config = loadConfig(minimalEnv({
       POLYMARKET_PRIVATE_KEY: '0xdeadbeef',
-      POLYMARKET_API_KEY: 'poly-key',
-      // Missing POLYMARKET_API_SECRET and POLYMARKET_API_PASSPHRASE
     }));
 
-    expect(config.polymarket).toBeUndefined();
+    expect(config.polymarket).toBeDefined();
+    expect(config.polymarket!.privateKey).toBe('0xdeadbeef');
+    expect(config.polymarket!.apiKey).toBeUndefined();
+    expect(config.polymarket!.apiSecret).toBeUndefined();
+    expect(config.polymarket!.passphrase).toBeUndefined();
   });
 
   it('Hyperliquid config passes', () => {

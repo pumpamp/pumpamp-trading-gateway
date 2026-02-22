@@ -1,5 +1,8 @@
 import type { VenueConnector, OrderRequest, OrderResult, Position, Balance } from '@pumpamp/core';
+import { createLogger } from '@pumpamp/core';
 import { BinanceApi } from './binance-api.js';
+
+const logger = createLogger('BinanceConnector');
 import type { BinanceOrderRequest, BinanceOrderResponse, BinancePosition } from './types.js';
 
 export interface BinanceConnectorConfig {
@@ -80,7 +83,7 @@ export class BinanceConnector implements VenueConnector {
       try {
         await this.api.cancelAllOrders(symbol);
       } catch (error) {
-        console.error(`Failed to cancel orders for ${symbol}:`, error);
+        logger.error({ symbol, error }, 'Failed to cancel orders for symbol');
       }
     }
   }
@@ -132,7 +135,7 @@ export class BinanceConnector implements VenueConnector {
     const now = Date.now();
     if (now - this.lastHealthCheck > this.healthCheckInterval) {
       // Trigger async health check without blocking
-      this.performHealthCheck().catch(console.error);
+      this.performHealthCheck().catch((err) => logger.error({ error: err }, 'Health check failed'));
     }
     return this.healthy;
   }
@@ -145,7 +148,7 @@ export class BinanceConnector implements VenueConnector {
       this.healthy = true;
       this.lastHealthCheck = Date.now();
     } catch (error) {
-      console.error('Binance health check failed:', error);
+      logger.error({ error }, 'Binance health check failed');
       this.healthy = false;
     }
   }

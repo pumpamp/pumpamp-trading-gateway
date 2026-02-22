@@ -3,10 +3,9 @@ import { createHmac } from 'node:crypto';
 import { signQuery, buildSignedUrl, buildAuthHeaders } from '../binance-auth.js';
 
 // ============================================================
-// UT-6d.1: HMAC-SHA256 signing (3 tests)
 // ============================================================
 
-describe('UT-6d.1: Binance HMAC-SHA256 signing', () => {
+describe('Binance HMAC-SHA256 signing', () => {
   it('signs a query string with known key and produces expected HMAC', () => {
     const secret = 'test-secret-key-12345';
     const queryString = 'symbol=BTCUSDT&side=BUY&type=MARKET&quantity=0.001&timestamp=1700000000000';

@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { MarketIdMapper } from '../market-id-mapper.js';
 
+// ============================================================
+// ============================================================
+
 describe('market-id-mapper', () => {
   it('Crypto convention: strip slash', () => {
     const mapper = new MarketIdMapper();

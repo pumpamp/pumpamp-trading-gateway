@@ -34,10 +34,9 @@ function createConnector(futures = true) {
 }
 
 // ============================================================
-// UT-6d.2: Order formatting (3 tests)
 // ============================================================
 
-describe('UT-6d.2: Binance order formatting', () => {
+describe('Binance order formatting', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -192,10 +191,9 @@ describe('UT-6d.2: Binance order formatting', () => {
 });
 
 // ============================================================
-// UT-6d.3: Balance retrieval (2 tests)
 // ============================================================
 
-describe('UT-6d.3: Binance balance retrieval', () => {
+describe('Binance balance retrieval', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

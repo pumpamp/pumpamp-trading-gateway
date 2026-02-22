@@ -3,6 +3,9 @@ import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, join, basename } from 'node:path';
 import { strategyConfigSchema } from '../features/strategy/strategy-config.js';
 
+// ============================================================
+// ============================================================
+
 // We test the strategy list logic directly (same logic as cli.ts)
 // rather than parsing Commander, to avoid process.exit side effects.
 

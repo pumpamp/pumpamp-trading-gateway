@@ -143,6 +143,9 @@ function patchGatewayRelay(gateway: InstanceType<typeof Gateway>, port: number) 
   };
 }
 
+// ============================================================
+// ============================================================
+
 describe('Order Routing End-to-End', () => {
   let server: TestServer;
 
@@ -336,7 +339,8 @@ describe('Order Routing End-to-End', () => {
       );
 
       expect(cancelUpdates.length).toBeGreaterThanOrEqual(1);
-      expect(kalshi.cancelOrder).toHaveBeenCalledWith(orderId);
+      // Cancel should use the venue-native order ID, not the internal gateway ID
+      expect(kalshi.cancelOrder).toHaveBeenCalledWith('kalshi-venue-ord-1');
     } else {
       // If no order was tracked (e.g., immediate fill), we still verify cancel_order
       // is called with whatever ID we provide.

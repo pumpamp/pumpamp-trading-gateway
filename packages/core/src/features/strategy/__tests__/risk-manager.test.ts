@@ -3,6 +3,9 @@ import { RiskManager } from '../risk-manager.js';
 import type { TradeCommand, Position } from '../../../shared/protocol.js';
 import type { RiskLimits } from '../strategy-config.js';
 
+// ============================================================
+// ============================================================
+
 function makeCommand(overrides?: Partial<TradeCommand>): TradeCommand {
   return {
     type: 'trade',

@@ -125,13 +125,14 @@ Each venue requires a complete set of credentials. Partial configuration disable
 | `KALSHI_API_KEY` | Kalshi API key |
 | `KALSHI_PRIVATE_KEY_PATH` | Path to RSA private key PEM file |
 
-**Polymarket** (4 required):
+**Polymarket** (1 required):
 | Variable | Description |
 |----------|-------------|
 | `POLYMARKET_PRIVATE_KEY` | Ethereum private key (0x...) |
-| `POLYMARKET_API_KEY` | CLOB API key |
-| `POLYMARKET_API_SECRET` | CLOB API secret |
-| `POLYMARKET_API_PASSPHRASE` | CLOB API passphrase |
+
+API credentials (`POLYMARKET_API_KEY`, `POLYMARKET_API_SECRET`, `POLYMARKET_API_PASSPHRASE`) are **auto-derived** from the private key on startup using the CLOB client's `deriveApiKey()`. You do not need to copy them from the Polymarket website. If you do provide them explicitly, they will be used as-is.
+
+Polymarket uses a proxy wallet architecture: your private key controls an EOA (Externally Owned Account), and Polymarket assigns a proxy contract wallet that holds your funds. The gateway handles this automatically -- just provide your private key and optionally `POLYMARKET_PROXY_ADDRESS` if you know your proxy address.
 
 **Hyperliquid** (1 required):
 | Variable | Description |
@@ -339,10 +340,12 @@ STRATEGY_CONFIG_PATH=./strategy.json AUTO_TRADE_ENABLED=true node ./packages/cor
 
 ### Polymarket
 
-1. You need an Ethereum wallet with a private key
-2. Register the wallet on [Polymarket CLOB](https://clob.polymarket.com)
-3. Generate API credentials (key, secret, passphrase)
-4. Set all 4 `POLYMARKET_*` variables in `.env`
+1. You need an Ethereum wallet with a private key that has been used on [Polymarket](https://polymarket.com)
+2. Set `POLYMARKET_PRIVATE_KEY` in `.env`
+
+That's it. The gateway automatically derives the CLOB API credentials from your private key on startup using Polymarket's `deriveApiKey()` method. This is a deterministic derivation -- the same private key always produces the same API credentials, so there is no need to copy key/secret/passphrase from the Polymarket website.
+
+**Why only the private key?** Polymarket's CLOB API credentials are cryptographically derived from your Ethereum private key via an EIP-712 signature. The `deriveApiKey()` function signs a structured message with your key and uses the signature to deterministically generate the API key, secret, and passphrase. This means the API credentials are not independent secrets -- they are a function of your private key. Requiring users to manually copy them from the website was unnecessary friction.
 
 ### Hyperliquid
 
@@ -405,6 +408,12 @@ pnpm test
 ### Type Check
 
 ```bash
+pnpm typecheck
+```
+
+### Lint
+
+```bash
 pnpm lint
 ```
 
@@ -415,41 +424,42 @@ pumpamp-trading-gateway/
   packages/
     core/
       src/
-        gateway.ts                   # Main orchestrator
-        cli.ts                       # CLI commands
-        index.ts                     # Public exports
+        gateway.ts                        # Main orchestrator
+        cli.ts                            # CLI commands (start, pair, simulate, etc.)
+        index.ts                          # Public exports
         shared/
-          protocol.ts                # Relay message type definitions
-          config.ts                  # .env loading and validation (Zod)
-          logger.ts                  # Structured logging with redaction
+          config.ts                       # .env loading and validation
+          logger.ts                       # Structured logging with secret redaction
+          protocol.ts                     # Relay message type definitions
         features/
-          relay/
-            relay-client.ts          # WebSocket client to PumpAmp relay
-          signals/
-            signal-consumer.ts       # WebSocket client to signal stream
           execution/
-            order-router.ts          # Route commands to venue connectors
-            position-tracker.ts      # Aggregate positions, compute P&L
-            venue-connector.ts       # VenueConnector interface
+            order-router.ts               # Route commands to venue connectors
+            venue-connector.ts            # VenueConnector interface
+            position-tracker.ts           # Aggregate positions, compute P&L
+          relay/
+            relay-client.ts               # WebSocket client to PumpAmp relay
+          signals/
+            signal-consumer.ts            # WebSocket client to signal stream
           strategy/
-            strategy-engine.ts       # Auto-trade engine (signal matching, risk)
-            strategy-config.ts       # Strategy config schema and loader
-            market-id-mapper.ts      # Market ID translation (venue:symbol)
-            risk-manager.ts          # Rate limit, cooldown, exposure checks
-          replay/
-            replay-consumer.ts       # HTTP client for paginated signal replay
-            replay-engine.ts         # Backtest orchestrator
-            replay-report.ts         # Performance metrics and formatting
+            strategy-engine.ts            # Auto-trade strategy engine
+            strategy-config.ts            # Strategy config schema and loader
+            risk-manager.ts               # Rate limit, cooldown, exposure checks
+            market-id-mapper.ts           # Venue:symbol market ID translation
           simulator/
-            simulator.ts             # Fake venues + command generator
-            simulator-signal-source.ts  # Synthetic signal generator
+            simulator.ts                  # Simulation mode (fake venues + commands)
+            simulator-signal-source.ts    # Synthetic signal generator
+          replay/
+            replay-consumer.ts            # Historical signal replay engine
     connectors/
-      kalshi/                        # RSA-PSS authentication
-      polymarket/                    # EIP-712 + HMAC authentication
-      hyperliquid/                   # EIP-712 authentication
-      binance/                       # HMAC-SHA256 authentication
-  templates/                         # Pre-built strategy templates
+      kalshi/               # RSA-PSS authentication
+      polymarket/           # EIP-712 + HMAC authentication
+      hyperliquid/          # EIP-712 authentication
+      binance/              # HMAC-SHA256 authentication
 ```
+
+## Dependency Notes
+
+The Polymarket connector uses `@ethersproject/wallet` (ethers v5) because it depends on `@polymarket/clob-client` which requires ethers v5. The Hyperliquid connector uses `ethers` v6. Both are isolated in their own packages and do not conflict at runtime.
 
 ## Docker
 

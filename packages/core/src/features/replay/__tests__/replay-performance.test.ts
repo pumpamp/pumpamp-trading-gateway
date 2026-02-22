@@ -1,3 +1,5 @@
+// Replay performance test
+
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import type { Signal } from '../../signals/signal-consumer.js';
 import type { TradeCommand } from '../../../shared/protocol.js';
@@ -113,6 +115,7 @@ describe('Replay completes under 30s for 10,000-signal window', () => {
     expect(report.summary.totalSignals).toBe(10000);
     expect(report.summary.tradesGenerated).toBe(20000); // 2 per signal
 
+    // Must complete under 30 seconds
     expect(elapsed).toBeLessThan(30000);
 
     // Emit runtime for baseline tracking

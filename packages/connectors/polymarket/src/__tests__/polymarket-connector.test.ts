@@ -43,10 +43,9 @@ function createConnector() {
 }
 
 // ============================================================
-// UT-6b.2: Order formatting (2 tests)
 // ============================================================
 
-describe('UT-6b.2: Polymarket order formatting', () => {
+describe('Polymarket order formatting', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -125,10 +124,9 @@ describe('UT-6b.2: Polymarket order formatting', () => {
 });
 
 // ============================================================
-// UT-6b.4: condition_id -> token_id resolution (3 tests)
 // ============================================================
 
-describe('UT-6b.4: Polymarket condition_id resolution', () => {
+describe('Polymarket condition_id resolution', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -231,10 +229,9 @@ describe('UT-6b.4: Polymarket condition_id resolution', () => {
 });
 
 // ============================================================
-// UT-6b.3: Health check and balance (2 tests)
 // ============================================================
 
-describe('UT-6b.3: Polymarket health and balance', () => {
+describe('Polymarket health and balance', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

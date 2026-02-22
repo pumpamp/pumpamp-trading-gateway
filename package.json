@@ -4,14 +4,9 @@
   "description": "Open-source trading gateway for PumpAmp - execute trades on your exchange accounts from PumpAmp signals",
   "type": "module",
   "license": "MIT",
-  "author": "PumpAmp <hello@pumpamp.com>",
-  "homepage": "https://github.com/pumpamp/pumpamp-trading-gateway",
   "repository": {
     "type": "git",
     "url": "https://github.com/pumpamp/pumpamp-trading-gateway.git"
-  },
-  "bugs": {
-    "url": "https://github.com/pumpamp/pumpamp-trading-gateway/issues"
   },
   "engines": {
     "node": ">=20.0.0"

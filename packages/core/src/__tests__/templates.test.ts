@@ -3,6 +3,9 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { strategyConfigSchema } from '../features/strategy/strategy-config.js';
 
+// ============================================================
+// ============================================================
+
 const TEMPLATES_DIR = resolve(__dirname, '../../../../templates');
 
 function loadTemplate(name: string): unknown {

@@ -35,10 +35,9 @@ function createConnector() {
 }
 
 // ============================================================
-// UT-6a.2: Order formatting (3 tests)
 // ============================================================
 
-describe('UT-6a.2: Kalshi order formatting', () => {
+describe('Kalshi order formatting', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -79,10 +78,10 @@ describe('UT-6a.2: Kalshi order formatting', () => {
     expect(sentRequest.action).toBe('buy');   // 'open' -> 'buy'
     expect(sentRequest.side).toBe('yes');      // 'Yes' -> 'yes'
     expect(sentRequest.count).toBe(5);
-    expect(sentRequest.type).toBe('market');
+    expect(sentRequest.type).toBeUndefined(); // Kalshi v2 has no type field
     expect(sentRequest.client_order_id).toBe('cmd-001');
-    // Market orders should not have yes_price or no_price
-    expect(sentRequest.yes_price).toBeUndefined();
+    // Market buy: yes_price set to extreme (99 cents) for immediate fill
+    expect(sentRequest.yes_price).toBe(99);
     expect(sentRequest.no_price).toBeUndefined();
   });
 
@@ -116,7 +115,7 @@ describe('UT-6a.2: Kalshi order formatting', () => {
     await connector.placeOrder(order);
 
     const sentRequest = mockPlaceOrder.mock.calls[0][0];
-    expect(sentRequest.type).toBe('limit');
+    expect(sentRequest.type).toBeUndefined(); // Kalshi v2 has no type field
     expect(sentRequest.action).toBe('buy');    // 'open' -> 'buy'
     expect(sentRequest.side).toBe('yes');       // 'Yes' -> 'yes'
     // 0.55 decimal -> 55 cents
@@ -163,10 +162,9 @@ describe('UT-6a.2: Kalshi order formatting', () => {
 });
 
 // ============================================================
-// UT-6a.3: Balance retrieval (2 tests)
 // ============================================================
 
-describe('UT-6a.3: Kalshi balance retrieval', () => {
+describe('Kalshi balance retrieval', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -199,10 +197,9 @@ describe('UT-6a.3: Kalshi balance retrieval', () => {
 });
 
 // ============================================================
-// UT-6a.4: Error mapping (4 tests)
 // ============================================================
 
-describe('UT-6a.4: Kalshi error mapping', () => {
+describe('Kalshi error mapping', () => {
   it('maps "insufficient_balance" to INSUFFICIENT_BALANCE', () => {
     expect(mapKalshiError('insufficient balance for this order')).toBe('INSUFFICIENT_BALANCE');
     expect(mapKalshiError('Insufficient funds available')).toBe('INSUFFICIENT_BALANCE');

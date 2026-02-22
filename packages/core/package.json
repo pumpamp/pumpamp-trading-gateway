@@ -1,15 +1,9 @@
 {
   "name": "@pumpamp/core",
   "version": "0.1.0",
-  "description": "Core gateway logic for PumpAmp Trading Gateway",
-  "type": "module",
+  "description": "Core engine for PumpAmp Trading Gateway",
   "license": "MIT",
-  "author": "PumpAmp <hello@pumpamp.com>",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pumpamp/pumpamp-trading-gateway.git",
-    "directory": "packages/core"
-  },
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

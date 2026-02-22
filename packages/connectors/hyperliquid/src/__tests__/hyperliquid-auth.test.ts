@@ -6,10 +6,9 @@ import { signAction } from '../hyperliquid-auth.js';
 const testWallet = ethers.Wallet.createRandom();
 
 // ============================================================
-// UT-6c.1: EIP-712 signing (3 tests)
 // ============================================================
 
-describe('UT-6c.1: Hyperliquid EIP-712 signing', () => {
+describe('Hyperliquid EIP-712 signing', () => {
   it('signs an exchange action and returns valid hex signature components', async () => {
     const action = {
       type: 'order',

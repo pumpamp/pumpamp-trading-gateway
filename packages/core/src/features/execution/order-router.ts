@@ -27,8 +27,14 @@ export interface MarketIdParts {
 
 export interface OrderState {
   orderId: string;
+  venueOrderId?: string;
   venue: string;
   marketId: string;
+  side: string;
+  action: string;
+  size: number;
+  orderType: string;
+  limitPrice?: number;
   status: 'pending' | 'submitted' | 'filled' | 'rejected' | 'cancelled';
   commandId: string;
 }
@@ -169,6 +175,11 @@ export class OrderRouter extends EventEmitter {
       orderId,
       venue,
       marketId: command.market_id,
+      side: command.side,
+      action: command.action,
+      size: command.size,
+      orderType: command.order_type,
+      limitPrice: command.limit_price,
       status: 'pending',
       commandId: command.id,
     });
@@ -200,12 +211,14 @@ export class OrderRouter extends EventEmitter {
       // Update order state
       const order = this.orders.get(orderId)!;
       order.status = result.status;
+      order.venueOrderId = result.venue_order_id;
       this.orders.set(orderId, order);
 
       // Emit order update
       this.emit('order_update', {
         type: 'order_update',
         order_id: orderId,
+        command_id: command.id,
         venue,
         venue_order_id: result.venue_order_id,
         market_id: command.market_id,
@@ -213,6 +226,8 @@ export class OrderRouter extends EventEmitter {
         side: command.side,
         action: command.action,
         size: command.size,
+        order_type: command.order_type,
+        limit_price: command.limit_price,
         fill_price: result.fill_price,
         filled_at: result.filled_at,
       } as OrderUpdateReport);
@@ -246,12 +261,15 @@ export class OrderRouter extends EventEmitter {
       this.emit('order_update', {
         type: 'order_update',
         order_id: orderId,
+        command_id: command.id,
         venue,
         market_id: command.market_id,
         status: 'rejected',
         side: command.side,
         action: command.action,
         size: command.size,
+        order_type: command.order_type,
+        limit_price: command.limit_price,
       } as OrderUpdateReport);
     }
   }
@@ -286,8 +304,9 @@ export class OrderRouter extends EventEmitter {
     }
 
     try {
-      // Cancel order via connector
-      await connector.cancelOrder(command.order_id);
+      // Cancel order via connector using venue-native ID
+      const cancelId = order.venueOrderId ?? command.order_id;
+      await connector.cancelOrder(cancelId);
 
       // Update order state
       order.status = 'cancelled';
@@ -297,12 +316,13 @@ export class OrderRouter extends EventEmitter {
       this.emit('order_update', {
         type: 'order_update',
         order_id: command.order_id,
+        command_id: order.commandId,
         venue: order.venue,
         market_id: order.marketId,
         status: 'cancelled',
-        side: 'unknown', // Not tracked in OrderState
-        action: 'unknown',
-        size: 0,
+        side: order.side,
+        action: order.action,
+        size: order.size,
       } as OrderUpdateReport);
     } catch (error) {
       this.emitError({
@@ -348,12 +368,13 @@ export class OrderRouter extends EventEmitter {
         this.emit('order_update', {
           type: 'order_update',
           order_id: orderId,
+          command_id: order.commandId,
           venue: order.venue,
           market_id: order.marketId,
           status: 'cancelled',
-          side: 'unknown',
-          action: 'unknown',
-          size: 0,
+          side: order.side,
+          action: order.action,
+          size: order.size,
         } as OrderUpdateReport);
       }
     }

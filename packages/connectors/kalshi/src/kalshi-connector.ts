@@ -87,7 +87,7 @@ export class KalshiConnector implements VenueConnector {
         action: kalshiRequest.action,
         side: kalshiRequest.side,
         count: kalshiRequest.count,
-        type: kalshiRequest.type,
+        order_type: order.order_type,
         yes_price: kalshiRequest.yes_price,
         no_price: kalshiRequest.no_price,
       }, 'Sending order to Kalshi API');
@@ -147,7 +147,7 @@ export class KalshiConnector implements VenueConnector {
         await this.api.getBalance();
         this.healthy = true;
       } catch (error) {
-        console.error('Kalshi health check failed:', error);
+        logger.error({ error }, 'Kalshi health check failed');
         this.healthy = false;
       }
     }, 30_000);
@@ -155,21 +155,34 @@ export class KalshiConnector implements VenueConnector {
 
   /**
    * Map OrderRequest to Kalshi-specific format.
+   *
+   * Kalshi v2 has no "type" field -- order behavior is determined by price + time_in_force.
+   * Market orders: set price to extreme boundary (99 for buy, 1 for sell) to fill immediately.
+   * Limit orders: set price to the user's specified limit price.
    */
   private mapOrderRequest(order: OrderRequest): KalshiOrderRequest {
     const side = order.side.toLowerCase() as 'yes' | 'no';
+    const action = order.action.toLowerCase() === 'open' ? 'buy' : 'sell';
 
     const request: KalshiOrderRequest = {
       ticker: order.market_id,
-      action: order.action.toLowerCase() === 'open' ? 'buy' : 'sell',
+      action,
       side,
       count: order.size,
-      type: order.order_type,
       client_order_id: order.command_id,
     };
 
     // Kalshi prices are in cents (1-99 integer); gateway sends decimal (0.01-0.99)
-    if (order.order_type === 'limit' && order.limit_price !== undefined) {
+    if (order.order_type === 'market') {
+      // Market order: use extreme price to ensure immediate fill
+      const extremePrice = action === 'buy' ? 99 : 1;
+      if (side === 'yes') {
+        request.yes_price = extremePrice;
+      } else {
+        request.no_price = extremePrice;
+      }
+    } else if (order.limit_price !== undefined) {
+      // Limit order: use the specified price
       const priceCents = Math.round(order.limit_price * 100);
       if (side === 'yes') {
         request.yes_price = priceCents;

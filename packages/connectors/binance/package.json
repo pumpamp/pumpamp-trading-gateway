@@ -1,15 +1,9 @@
 {
   "name": "@pumpamp/connector-binance",
   "version": "0.1.0",
-  "description": "Binance spot and futures connector for PumpAmp Trading Gateway",
-  "type": "module",
+  "description": "Binance venue connector for PumpAmp Trading Gateway",
   "license": "MIT",
-  "author": "PumpAmp <hello@pumpamp.com>",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pumpamp/pumpamp-trading-gateway.git",
-    "directory": "packages/connectors/binance"
-  },
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

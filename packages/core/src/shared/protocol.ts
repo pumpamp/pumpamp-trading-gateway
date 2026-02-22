@@ -85,6 +85,7 @@ export type CommandAckReport = {
 export type OrderUpdateReport = {
   type: 'order_update';
   order_id: string;
+  command_id?: string;
   venue: string;
   venue_order_id?: string;
   market_id: string;
@@ -92,6 +93,8 @@ export type OrderUpdateReport = {
   side: string;
   action: string;
   size: number;
+  order_type?: string;
+  limit_price?: number;
   fill_price?: number;
   filled_at?: string;
 };
@@ -116,6 +119,7 @@ export type SettlementReport = {
   entry_price: number;
   settlement_price: number;
   realized_pnl: number;
+  timestamp: string;
 };
 
 export type ErrorReport = {
@@ -216,4 +220,5 @@ export interface Settlement {
   entry_price: number;
   settlement_price: number;
   realized_pnl: number;
+  timestamp?: string;
 }

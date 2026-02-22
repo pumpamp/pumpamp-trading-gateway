@@ -1,3 +1,5 @@
+// ReplayConsumer unit tests
+
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ReplayConsumer, type ReplayConsumerConfig } from '../replay-consumer.js';
 

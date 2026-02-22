@@ -12,11 +12,9 @@ const kalshiSchema = z.object({
   KALSHI_PRIVATE_KEY_PATH: z.string().min(1).optional(),
 });
 
+// Only the private key is required -- API credentials are auto-derived via deriveApiKey()
 const polymarketSchema = z.object({
   POLYMARKET_PRIVATE_KEY: z.string().min(1),
-  POLYMARKET_API_KEY: z.string().min(1),
-  POLYMARKET_API_SECRET: z.string().min(1),
-  POLYMARKET_API_PASSPHRASE: z.string().min(1),
 });
 
 const hyperliquidSchema = z.object({
@@ -57,9 +55,9 @@ export interface KalshiConfig {
 export interface PolymarketConfig {
   apiUrl: string;
   privateKey: string;
-  apiKey: string;
-  apiSecret: string;
-  passphrase: string;
+  apiKey?: string;
+  apiSecret?: string;
+  passphrase?: string;
   proxyAddress?: string;
 }
 
@@ -158,9 +156,9 @@ export function loadConfig(envOverrides?: Record<string, string | undefined>): G
       ? {
           apiUrl: (env as any).POLYMARKET_API_URL || 'https://clob.polymarket.com',
           privateKey: polymarketRaw.POLYMARKET_PRIVATE_KEY,
-          apiKey: polymarketRaw.POLYMARKET_API_KEY,
-          apiSecret: polymarketRaw.POLYMARKET_API_SECRET,
-          passphrase: polymarketRaw.POLYMARKET_API_PASSPHRASE,
+          apiKey: (env as any).POLYMARKET_API_KEY || undefined,
+          apiSecret: (env as any).POLYMARKET_API_SECRET || undefined,
+          passphrase: (env as any).POLYMARKET_API_PASSPHRASE || undefined,
           proxyAddress: (env as any).POLYMARKET_PROXY_ADDRESS || undefined,
         }
       : undefined,

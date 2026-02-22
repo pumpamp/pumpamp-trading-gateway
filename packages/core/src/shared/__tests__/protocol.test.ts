@@ -15,6 +15,9 @@ import type {
   ErrorReport,
 } from '../protocol.js';
 
+// ============================================================
+// ============================================================
+
 describe('BotUserCommand serialization', () => {
   it('Trade command round-trips through JSON.parse(JSON.stringify())', () => {
     const cmd: TradeCommand = {
@@ -140,6 +143,9 @@ describe('BotUserCommand serialization', () => {
   });
 });
 
+// ============================================================
+// ============================================================
+
 describe('RelayControlMessage serialization', () => {
   it('PairingConfirmed deserializes from JSON', () => {
     const raw = JSON.stringify({
@@ -170,6 +176,9 @@ describe('RelayControlMessage serialization', () => {
     expect(msg.reason).toBe('User revoked pairing from dashboard');
   });
 });
+
+// ============================================================
+// ============================================================
 
 describe('RelayReport serialization', () => {
   it('Heartbeat report serializes correctly', () => {

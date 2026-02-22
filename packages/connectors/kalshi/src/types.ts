@@ -8,9 +8,11 @@ export interface KalshiOrderRequest {
   action: 'buy' | 'sell';
   side: 'yes' | 'no';
   count: number;
-  type: 'market' | 'limit';
+  // Kalshi v2 has no "type" field -- order behavior is implicit from price + time_in_force
   yes_price?: number;
   no_price?: number;
+  buy_max_cost?: number;
+  time_in_force?: 'fill_or_kill' | 'good_till_canceled' | 'immediate_or_cancel';
   expiration_ts?: number;
   client_order_id?: string;
 }

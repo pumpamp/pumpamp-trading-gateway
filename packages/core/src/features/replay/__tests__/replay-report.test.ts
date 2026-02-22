@@ -1,3 +1,5 @@
+// ReplayReport unit tests
+
 import { describe, it, expect, vi } from 'vitest';
 import { generateReport, formatReportTable, type ReplayReport } from '../replay-report.js';
 import type { ReplayPosition, ReplayProgress, ReplayConfig } from '../replay-engine.js';
